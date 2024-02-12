@@ -3,15 +3,17 @@ import { useForm, Controller } from "react-hook-form"
 import axios from 'axios';
 import moment from 'moment';
 import { useNavigate } from "react-router-dom";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 const Form = () => {
-const navigate = useNavigate()
+    const navigate = useNavigate()
     const [cities, setCities] = useState([]);
+    const [startDate, setStartDate] = useState(new Date());
 
     const onSubmit = async (data) => {
-        console.log(data);
         try {
-            const response = await axios.post("http://44.201.126.35:5000/api/auth/signUp",JSON.stringify(data));
-            window.alert('User Created Succesfully, Please login'); 
+            const response = await axios.post("http://44.201.126.35:5000/api/auth/signUp", JSON.stringify(data));
+            window.alert('User Created Succesfully, Please login');
             navigate('/login')
         }
         catch (err) {
@@ -148,16 +150,13 @@ const navigate = useNavigate()
                                     control={control}
                                     rules={{ required: true }}
                                     render={({ field }) => (
-                                        <input
-                                            {...field}
-                                            className="form-control "
-                                            type="date"
-                                            selected={field.value}
-                                            onChange={(date) =>
-                                                field.onChange(moment(date).format("DD/MM/yyyy"))}
-                                            dateformat="dd/MM/yyyy"
-                                            placeholdertext="DD/MM/YYYY"
-                                        />
+                                        <DatePicker
+                                        className="form-control"
+                                        selected={field.value ? moment(field.value, "DD/MM/yyyy").toDate() : null}
+                                        onChange={(date) => field.onChange(moment(date).format("DD/MM/yyyy"))}
+                                        placeholderText="DD/MM/YYYY"
+                                        dateFormat="dd/MM/yyyy"
+                                    />
                                     )}
                                 />
                                 {errors.dateOfBirth && <span className="text-danger">*This field is required</span>}
